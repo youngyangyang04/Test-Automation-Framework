@@ -44,6 +44,18 @@ class TestSendRequests(unittest.TestCase):
         
         # 断言状态码
         self.assertEqual(response['msg_code'], 200, "Login failed")
+    def test_get_user_info(self):
+        url = 'http://127.0.0.1:8000/dar/user/get_user_info'
+        params = {
+            'token': '123456789'
+        }
+        
+        # 使用 SendRequests 类来发送请求
+        request_sender = SendRequests()
+        response = request_sender.run_main('GET', url, params, None)
+        
+        # 断言状态码
+        self.assertEqual(response['msg_code'], 200, "Get user info failed")
         
 if __name__ == '__main__':
     unittest.main()
