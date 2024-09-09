@@ -26,6 +26,21 @@ class ReadYamlData:
         mode = 'w' if not os.path.exists(file_path) else 'a'
         self._write_yaml(file_path, data, mode)
 
+    def get_extract_yaml(self, node_name):
+        """读取接口提取的变量值
+
+        Args:
+            node_name: extract.yaml文件中的key
+        """
+        if not os.path.exists('extract.yaml'):
+            print('extract.yaml文件不存在')
+            file = open('extract.yaml', 'w', encoding='utf-8')
+            file.close()
+            print('extract.yaml文件已创建')
+            
+        with open('extract.yaml', 'r', encoding='utf-8') as f:
+            extract_data = yaml.safe_load(f)
+            return extract_data[node_name]
     
 if __name__ == '__main__':
     for testcase in get_testcase_yaml('login.yaml'):

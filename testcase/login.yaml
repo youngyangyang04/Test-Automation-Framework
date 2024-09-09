@@ -9,7 +9,7 @@ testCase:
   - case_name: 用户名和密码正确登录验证
     data:
       user_name: test01
-      passwd: admin123
+      passwd: ${md5_params('admin123')}
     validation:
       - contains: 
           msg: '登录成功'
