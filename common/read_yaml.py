@@ -3,8 +3,8 @@ import os
 def get_testcase_yaml(file):
     try:
         with open(file, 'r', encoding='utf-8') as f:
-            for data in yaml.safe_load_all(f):
-                yield data
+            data = yaml.safe_load(f)  # 使用 safe_load 读取数据
+            return data  # 返回读取的数据
     except Exception as e:
         print(f"Error reading YAML file: {e}")
         return

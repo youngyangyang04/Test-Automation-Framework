@@ -4,7 +4,7 @@ import random as rd
 class DebugTalk:
     def __init__(self):
         self.read = ReadYamlData()
-    def get_extract_data(self, node_name, randoms=None):
+    def get_extract_data(self, node_name, randoms=0):
         """
         根据指定的节点名称和随机选项从extract.yaml文件中提取数据。
 
@@ -23,10 +23,12 @@ class DebugTalk:
         data = self.read.get_extract_yaml(node_name)
 
         data_value = {
+            1: data,
             0: rd.choice(data),  # 随机选择一个数据项
             -1: ','.join(data),  # 返回所有数据项，使用逗号分隔
             -2: ','.join(data).split(',')  # 返回所有数据项，先使用逗号分隔，再分割成列表
         }
+        
 
         return data_value[int(randoms)]
     
@@ -36,10 +38,10 @@ class DebugTalk:
         Args:
             params: 需要加密的参数
         """
-        pass
+        return params + 'md5'
     
 
 if __name__ == '__main__':
     debug = DebugTalk()
-    print(debug.get_extract_data('product_id', randoms=-2))
+    print(debug.get_extract_data('token', randoms=1))
     

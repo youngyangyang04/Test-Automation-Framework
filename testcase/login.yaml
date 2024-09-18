@@ -9,9 +9,9 @@ testCase:
   - case_name: 用户名和密码正确登录验证
     data:
       user_name: test01
-      passwd: ${md5_params('admin123')}
+      passwd: ${md5_params(admin123)}
     validation:
       - contains: 
           msg: '登录成功'
     extract:
-      token: $.token
+      token: ${get_extract_data(token, 1)}
