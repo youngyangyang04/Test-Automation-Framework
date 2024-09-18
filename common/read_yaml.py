@@ -22,7 +22,7 @@ class ReadYamlData:
             yaml.dump(data, f, allow_unicode=True)
     
     def write_yaml_data(self, data):
-        file_path = 'extract.yaml'
+        file_path = 'testcase/extract.yaml'
         mode = 'w' if not os.path.exists(file_path) else 'a'
         self._write_yaml(file_path, data, mode)
 
@@ -32,13 +32,13 @@ class ReadYamlData:
         Args:
             node_name: extract.yaml文件中的key
         """
-        if not os.path.exists('extract.yaml'):
+        if not os.path.exists('testcase/extract.yaml'):
             print('extract.yaml文件不存在')
-            file = open('extract.yaml', 'w', encoding='utf-8')
+            file = open('testcase/extract.yaml', 'w', encoding='utf-8')
             file.close()
             print('extract.yaml文件已创建')
             
-        with open('extract.yaml', 'r', encoding='utf-8') as f:
+        with open('testcase/extract.yaml', 'r', encoding='utf-8') as f:
             extract_data = yaml.safe_load(f)
             return extract_data[node_name]
     
