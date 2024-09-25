@@ -1,6 +1,6 @@
 from common.read_yaml import ReadYamlData, get_testcase_yaml
 import json
-from debugtalk import DebugTalk
+from common.debugtalk import DebugTalk
 
 class BaseRequests:
     def __init__(self):
@@ -40,7 +40,7 @@ class BaseRequests:
         pass
     
 if __name__ == '__main__':
-    data = get_testcase_yaml('testcase/login.yaml')
+    data = get_testcase_yaml('../testcase/Login/login.yaml')
     
     base = BaseRequests()
     print(base.replace_load(data))
