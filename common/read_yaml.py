@@ -1,5 +1,8 @@
 import yaml
 import os
+from conf.setting import FILE_PATH
+
+
 def get_testcase_yaml(file):
     try:
         with open(file, 'r', encoding='utf-8') as f:
@@ -16,13 +19,13 @@ class ReadYamlData:
             self.file = 'login.yaml'
         else:
             self.file = file
-    
+
     def _write_yaml(self, file_path, data, mode):
         with open(file_path, mode, encoding='utf-8') as f:
             yaml.dump(data, f, allow_unicode=True)
-    
+
     def write_yaml_data(self, data):
-        file_path = 'testcase/extract.yaml'
+        file_path = FILE_PATH['extract']
         mode = 'w' if not os.path.exists(file_path) else 'a'
         self._write_yaml(file_path, data, mode)
 
@@ -32,17 +35,17 @@ class ReadYamlData:
         Args:
             node_name: extract.yaml文件中的key
         """
-        if not os.path.exists('testcase/extract.yaml'):
+        file_path = FILE_PATH['extract']
+        if not os.path.exists(file_path):
             print('extract.yaml文件不存在')
-            file = open('testcase/extract.yaml', 'w', encoding='utf-8')
+            file = open(file_path, 'w', encoding='utf-8')
             file.close()
             print('extract.yaml文件已创建')
-            
-        with open('testcase/extract.yaml', 'r', encoding='utf-8') as f:
+
+        with open(file_path, 'r', encoding='utf-8') as f:
             extract_data = yaml.safe_load(f)
             return extract_data[node_name]
-    
+
+
 if __name__ == '__main__':
-    for testcase in get_testcase_yaml('login.yaml'):
-        print(testcase)
-        
+    print(get_testcase_yaml(FILE_PATH['extract']))
