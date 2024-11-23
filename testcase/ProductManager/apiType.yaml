@@ -1,0 +1,15 @@
+- baseInfo:
+    api_name: 接口状态
+    url: /coupApply/cms/apiType
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 检查接口状态
+      json:
+        apiType: '1'
+        tines: ${today_zero_stamp()}
+      validation:
+        - inc: status
+      extract:
+        status: $.status

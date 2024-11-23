@@ -1,0 +1,9 @@
+.side-nav__brand {
+  background: url('sinoiov.png') no-repeat left center !important;      #url括号内写的就是自己图片的名字，我这里的是logo.png
+  margin-left: 12px;
+  height: 34px;
+  background-size: contain !important;
+}
+.side-nav__brand span{
+    display: none;
+}

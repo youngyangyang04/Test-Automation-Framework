@@ -1,0 +1,17 @@
+- baseInfo:
+    api_name: 修改用户
+    url: /dar/user/updateUser
+    method: POST
+    header:
+      Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+  testCase:
+    - case_name: 正常修改用户信息
+      data:
+        username: testadduser
+        password: tset6789#$123
+        role_id: 89588181111112343
+        dates: '2023-12-31'
+        phone: 13800000000
+      validation:
+        - contains: { 'status_code': 200 }
+        - contains: { 'msg': '更新成功' }

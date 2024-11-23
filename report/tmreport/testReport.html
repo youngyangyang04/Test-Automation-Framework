@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tmreport</title>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!--  <script src="echarts.min.js"></script>-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
+   <!--导入js库-->
+  <script src="https://cdn.bootcss.com/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+  <div id="app">
+    <el-container>
+      <el-header>
+        <h2 class="el-icon-document-copy">自动化测试报告</h2>
+      </el-header>
+      <el-container>
+        <el-aside width="500px" style="margin-top: 20px">
+          <el-card shadow="hover" style=";margin-bottom: 20px">
+            <h3>执行成功率</h3>
+            <div id="main" style="width: 500px;height:430px"></div>
+          </el-card>
+          <el-card shadow="hover">
+            <div id="main2" style="width: 500px;height:430px;"></div>
+          </el-card>
+        </el-aside>
+        <el-main>
+           <el-row>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">本次执行情况</span>
+                   <el-tag type="primary" label="执行结果" effect="dark" style="float: right" size="small">执行</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: dodgerblue">本次共执行用例 {{summary.total}} 条</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">成功率 {{(summary.success_rate * 100).toFixed(2)}}% </span>
+                </el-card>
+             </el-col>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">异常情况</span>
+                   <el-tag type="danger" label="执行结果" effect="dark" style="float: right" size="small">异常</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: indianred">本次共有失败用例 {{summary.failed}} 条</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">失败率 {{(summary.fail_rate * 100).toFixed(2)}}% </span>
+                </el-card>
+             </el-col>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">持续执行</span>
+                   <el-tag type="warning" label="执行结果" effect="dark" style="float: right" size="small">持续</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: #e6a23c">本次持续运行 {{summary.duration.toFixed(4)}}s</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">平均Case执行时间 {{(summary.avg_duration * 1000).toFixed(2)}} ms</span>
+                </el-card>
+             </el-col>
+           </el-row>
+           <el-card shadow="hover" style="margin-top: 20px">
+             <h3>用例执行记录</h3>
+             <el-alert
+                     class="el-icon-info"
+                    title="点击可展开下方详细日志"
+                    type="warning"
+                    effect="dark">
+              </el-alert>
+              <el-table
+                :data="data.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+                stripe
+                style="width: 100%"
+                height="600"
+                size="medium"
+                @expand-change="expend"
+                :row-key='getRowKeys'
+                :expand-row-keys="expands"
+                @filter-change="fliterChange"
+              >
+                 <el-table-column type="expand"  width="100" prop="logs">
+                  <template slot-scope="scope">
+                      <el-card class="content">
+                          <pre id="editor" class="ace_editor" style="min-height:400px">
+                            <textarea class="ace_text-input">{{scope.row.logs}}</textarea>
+                          </pre>
+                          <script type="application/javascript">
+                            var editor = ace.edit('editor')
+                              //设置风格和语言（更多风格和语言，请到github上相应目录查看）
+                            theme = "clouds"
+                            language = "python"
+                            editor.setTheme("ace/theme/" + theme);
+                            editor.session.setMode("ace/mode/" + language);
+
+                            //字体大小
+                            editor.setFontSize(10);
+
+                            //设置只读（true时只读，用于展示代码）
+                            editor.setReadOnly(true);
+
+                            //自动换行,设置为off关闭
+                            editor.setOption("wrap", "free")
+
+                          </script>
+                      </el-card>
+                     </template>
+                  </el-table-column>
+                <el-table-column
+                  label="ID"
+                  type="index"
+                  :index="count"
+                  width="80"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="title"
+                  label="Case"
+                  width="300"
+                >
+                </el-table-column>
+
+                <el-table-column
+                  prop="time"
+                  label="Time"
+                  width="200">
+                </el-table-column>
+                <el-table-column
+                  prop="result"
+                  label="Result"
+                  :filters="[{ text: '成功', value: 1 }, { text: '失败', value: 0 }]"
+                  column-key="result"
+                  width="100"
+                >
+                  <template slot-scope="scope">
+                    <i class="el-icon-circle-check" style="color: green;font-size: large" v-if="scope.row.result==1"></i>
+                    <i class="el-icon-circle-close" style="color: red;font-size: large" v-if="scope.row.result==0"></i>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="doc"
+                  label="Doc"
+                  width="250">
+                </el-table-column>
+                <el-table-column
+                  prop="duration"
+                  label="Duration"
+                  width="150">
+                  <template slot-scope="scope">
+                    <span>{{(scope.row.duration*1000).toFixed(2)}} ms</span>
+                  </template>
+                </el-table-column>
+
+              </el-table>
+               <div class="block" style="margin-top: 20px">
+                    <el-pagination
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      :current-page="currentPage"
+                      :page-sizes="[10, 20, 50, 100]"
+                      :page-size="pageSize"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :total="data.length">
+                    </el-pagination>
+                  </div>
+           </el-card>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</body>
+
+  <!-- import Vue before Element -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+
+  <script>
+
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          visible: false,
+          dialogVisible: false,
+          data: [],
+          tableData: [{'id': 1695023670.9193647, 'title': 'testcase/Business interface/test_business_scenario.py::TestEBusinessScenario::test_business_scenario[case_info0]', 'logs': 'Captured log setup\nINFO     common.recordlog:sendrequest.py:135 接口名称：用户登录\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/login\nINFO     common.recordlog:sendrequest.py:137 请求方式：post\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：用户名和密码正确登录验证\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'user_name\': \'test01\', \'passwd\': \'admin123\'}}\nINFO     common.recordlog:sendrequest.py:107 cookie：{\'Cookie\': {\'access_token_cookie\': \'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5NTAyMzY3MCwianRpIjoiMWFhY2M5MTctZTQ4Yy00YWQwLWI4OWUtZjZlMGY1YzU2NmZmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImV4YW1wbGVfdXNlciIsIm5iZiI6MTY5NTAyMzY3MCwiZXhwIjoxNjk1MDI0NTcwfQ.zLkSiPTSGft--NSYC1l6dl9eI4Cb9cyhVUARrVn63Nc\'}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"登录成功","msg_code":200,"orgId":"6140913758128971280","token":"Cf9b77dABb7C4a7060EDBe26D121a","userId":"3818932580987349964"}\n\nINFO     common.recordlog:apiutil.py:146 提取接口的返回值：\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'error_code\': \'none\'}}, {\'eq\': {\'msg\': \'登录成功\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【None】,实际结果【[None]】\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'msg\': \'登录成功\'}，等于预期结果：{\'msg\': \'登录成功\'}\nINFO     common.recordlog:assertions.py:198 测试成功\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：商品列表\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/goodsList\nINFO     common.recordlog:sendrequest.py:137 请求方式：Get\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：获取商品列表\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\', \'token\': \'Cf9b77dABb7C4a7060EDBe26D121a\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:150 请求参数：{\'params\': {\'msgType\': \'getHandsetListOfCust\', \'page\': 1, \'size\': 20}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"api_info":"today:21 max:10000 all[90=21+33+36];expires:2030-12-31","cache":0,"error_code":"0000","goodsList":[{"goodsId":"18382788819","goods_count":"233","goods_image":"https://omsproductionimg.yangkeduo.com/images/2017-12-12/bcf848aa71c6389607ae7a84b70f1543.jpeg","goods_name":"【2件套】套装秋冬新款仿獭兔毛钉珠皮草毛毛短外套加厚大衣女装","original_price":"","unit_price":"￥99.00"},{"goodsId":"33809635011","goods_count":"521","goods_image":"https://omsproductionimg.yangkeduo.com/images/2017-12-12/176019babfdecffa1d9f98f40b7e99b4.jpeg","goods_name":"好奇小森林心钻装纸尿裤M22拉拉裤L18/XL14超薄透气裤型尿不湿 1件装","original_price":"","unit_price":"￥108.00"},{"goodsId":"56996760797","goods_count":"1181","goods_image":"https://omsproductionimg.yangkeduo.com/images/2017-12-12/efb5db42397550bffd3211ca6f197498.jpeg","goods_name":"冻干鸡小胸整块增肥营养发腮狗狗零食新手养猫零食幼猫零食100g","original_price":"","unit_price":"￥17.80"},{"goodsId":"82193785267","goods_count":"3000+","goods_image":"https://omsproductionimg.yangkeduo.com/images/2017-12-12/efb5db42397550bffd3211ca6f197498.jpeg","goods_name":"【自营】ISB伊珊娜意大利水果系列宠物犬猫沐浴露除臭香波护毛素","original_price":"","unit_price":"￥650.00"},{"goodsId":"74190550836","goods_count":"1000+","goods_image":"https://omsproductionimg.yangkeduo.com/images/2017-12-12/efb5db42397550bffd3211ca6f197498.jpeg","goods_name":"【新品零0CM嵌入式】海尔电冰箱410L家用法式四门多门官方正品","original_price":"","unit_price":"￥5746.00"}],"reason":"","request_id":"request_id","secache":"c98b29872e8a4b28859db207944ba817","secache_date":"2023-09-18 09:47:03","secache_time":1695001623000,"translate_language":"zh-CN"}\n\nINFO     common.recordlog:apiutil_business.py:193 json提取到参数：{\'goodsIds\': [\'18382788819\', \'33809635011\', \'56996760797\', \'82193785267\', \'74190550836\']}\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'error_code\': \'0000\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【0000】,实际结果【0000】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.02861659999999988, 'doc': '', 'time': '2023-09-18 15:54:30'}, {'id': 1695023670.9789722, 'title': 'testcase/Business interface/test_business_scenario.py::TestEBusinessScenario::test_business_scenario[case_info1]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：商品详情\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/productDetail\nINFO     common.recordlog:sendrequest.py:137 请求方式：post\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：获取商品详情\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/json;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:147 请求参数：{\'json\': {\'pro_id\': \'18382788819\', \'page\': 1, \'size\': 20}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"api_info":"today:21 max:10000 all[90=21+33+36];expires:2030-12-31","api_type":"pinduoduo","cache":0,"call_args":{"num_iid":"1620002566"},"client_ip":"106.6.39.223","error":"","error_code":"0000","execution_time":"0.437","goodsId":"82193785267","item":{"AmountOnSale":3188,"CategoryId":8484,"Coupon":null,"Delivery":{"From":null,"Info":null,"MarkInfo":null,"Postage":"快递 免运费","To":null,"extras":null},"DescUrl":null,"Detail":"<img src=\\"https://img.pddpic.com/mms-material-img/2022-09-18/3f89d470-1af8-4dee-b529-6d62aa2ea3b7.png\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2019-02-15/ddf6fe7b-b536-4183-932d-69a1189a3f59.png\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/20f659b04d3e7e5851c27ff9931c96fc.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2019-11-14/4420a8c3-49ed-46d8-ab55-15e7a638ca31.jpg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/26c3e9d5cfbaf4e8f13b2bdd38f48d71.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/0aa872fa74599dad7b6aefe6b6c035c0.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/6bc959e32a30424c7a5284a37676999c.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/1fa9861a8c99c5e9e8119fd2239fef5a.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/b62cabf1d2320c5761e3f4c15203fb20.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/6f6e54376a66cbc78e16700d4c424fe1.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/2f60753dfc875a6876adc35833a69d31.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/ae0116e589d8de712f8dafd0c356cefe.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/da910c98fcc8de1b4d2d1498cd7899fd.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/140349649d8b7d08c8e88bfbbaa2f900.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/a953bae2eeb7364ef3ef2976a97d07eb.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/4da59828136c3b1308aad0aa990778a7.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-09-02/4a365b61a80e47288c8609ccd5982396.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-11-17/cd0a8a96b783a51236812ce24c59a329.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-11-17/16008ac19768d05e7dee16406ff958a1.jpeg\\" style=\\"width:100%;\\"/><img src=\\"https://t00img.yangkeduo.com/goods/images/2018-11-17/ef1d17b69ebf9449a8bb52459b168c26.jpeg\\" style=\\"width:100%;\\"/>","FansCount":null,"ImageUrls":["https://omsproductionimg.yangkeduo.com/images/2017-12-12/bcf848aa71c6389607ae7a84b70f1543.jpeg","https://omsproductionimg.yangkeduo.com/images/2017-12-12/176019babfdecffa1d9f98f40b7e99b4.jpeg","https://omsproductionimg.yangkeduo.com/images/2017-12-12/efb5db42397550bffd3211ca6f197498.jpeg","https://omsproductionimg.yangkeduo.com/images/2017-12-12/d209ef7bcc9183c3bb8ca1dfdb108d49.jpeg","https://omsproductionimg.yangkeduo.com/images/2017-12-12/74257ab65f3f00da7a90fde9042fe640.jpeg","https://t00img.yangkeduo.com/goods/images/2019-08-17/e8fbd9cb-cc74-4caa-9380-84c46d27b008.jpg","https://t00img.yangkeduo.com/goods/images/2019-08-17/d76f515b-e375-4060-b94e-cf64f6b0964e.jpg","https://t00img.yangkeduo.com/goods/images/2019-08-17/f2f279b5-6000-4fbe-b99b-7c1cbd7884ea.jpg"],"MainImageVideo":null,"OfferId":1620002566,"OriginalPriceRangeInfos":[{"ConvertPrice":0,"Price":115,"Range":"3"}],"PriceRangeInfos":[{"ConvertPrice":0,"Price":95.4,"Range":"3"}],"ProductFeatureTuples":[{"Item1":"面料材质","Item2":"仿皮草"},{"Item1":"成分含量","Item2":"71%（含）—80%（含）"},{"Item1":"版型","Item2":"修身"},{"Item1":"领型","Item2":"圆领"},{"Item1":"衣长","Item2":"短款"},{"Item1":"是否带毛领","Item2":"不带毛领"},{"Item1":"主风格","Item2":"气质名媛"}],"ProductFeatures":{"主风格":"气质名媛","成分含量":"71%（含）—80%（含）","是否带毛领":"不带毛领","版型":"修身","衣长":"短款","面料材质":"仿皮草","领型":"圆领"},"RateCount":null,"RetryCount":0,"SellCount":"已拼4.2万件","SellerId":null,"SellerNick":null,"ShopId":"461742","ShopInfo":null,"ShopName":"果果家气质女装","ShopUrl":"http://yangkeduo.com/mall_page.html?mall_id=461742","SkuMaps":[{"AmountOnSale":73,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:119128","OriginalPrice":115,"Price":95.4,"SkuId":"57114357891","SpecAttributes":{"尺码":"S（90斤以下）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":65,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:96784","OriginalPrice":115,"Price":95.4,"SkuId":"57114357892","SpecAttributes":{"尺码":"M（90-100斤）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":82,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:33651","OriginalPrice":115,"Price":95.4,"SkuId":"57114357893","SpecAttributes":{"尺码":"L（100-110斤）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":89,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:33652","OriginalPrice":115,"Price":95.4,"SkuId":"57114357894","SpecAttributes":{"尺码":"XL（110-120斤）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":94,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:33653","OriginalPrice":115,"Price":95.4,"SkuId":"57114357895","SpecAttributes":{"尺码":"2XL（120-130斤）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":105,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","Key":"1215:1115500378;1226:33656","OriginalPrice":115,"Price":95.4,"SkuId":"57114357896","SpecAttributes":{"尺码":"3XL（130-140斤）","颜色":"粉色两件套(外套+裙子)"}},{"AmountOnSale":1051,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:119128","OriginalPrice":115,"Price":95.4,"SkuId":"57114357897","SpecAttributes":{"尺码":"S（90斤以下）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":88,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:96784","OriginalPrice":115,"Price":95.4,"SkuId":"57114357898","SpecAttributes":{"尺码":"M（90-100斤）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":80,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:33651","OriginalPrice":115,"Price":95.4,"SkuId":"57114357899","SpecAttributes":{"尺码":"L（100-110斤）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":660,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:33652","OriginalPrice":115,"Price":95.4,"SkuId":"57114357900","SpecAttributes":{"尺码":"XL（110-120斤）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":126,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:33653","OriginalPrice":115,"Price":95.4,"SkuId":"57114357901","SpecAttributes":{"尺码":"2XL（120-130斤）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":89,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","Key":"1215:1115501666;1226:33656","OriginalPrice":115,"Price":95.4,"SkuId":"57114357902","SpecAttributes":{"尺码":"3XL（130-140斤）","颜色":"米色两件套（外套+裙子）"}},{"AmountOnSale":98,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/48b30664f0f7e526ab1b956e813f25cf.jpeg","Key":"1215:105309781;1226:119128","OriginalPrice":115,"Price":95.4,"SkuId":"103851107855","SpecAttributes":{"尺码":"S（90斤以下）","颜色":"蓝色两件套（外套+裙子）"}},{"AmountOnSale":95,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/3660b7893ca5cda1ffcea745d10b2506.jpeg","Key":"1215:105309781;1226:96784","OriginalPrice":115,"Price":95.4,"SkuId":"103851107856","SpecAttributes":{"尺码":"M（90-100斤）","颜色":"蓝色两件套（外套+裙子）"}},{"AmountOnSale":97,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/a4a5a671afbb2d8e1f4c21c0ced3bea8.jpeg","Key":"1215:105309781;1226:33651","OriginalPrice":115,"Price":95.4,"SkuId":"103851107857","SpecAttributes":{"尺码":"L（100-110斤）","颜色":"蓝色两件套（外套+裙子）"}},{"AmountOnSale":97,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/f0551176629bf81f25757c160198dba1.jpeg","Key":"1215:105309781;1226:33652","OriginalPrice":115,"Price":95.4,"SkuId":"103851107858","SpecAttributes":{"尺码":"XL（110-120斤）","颜色":"蓝色两件套（外套+裙子）"}},{"AmountOnSale":99,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/801a2e23140bfe76229f02aab0a8a5fe.jpeg","Key":"1215:105309781;1226:33653","OriginalPrice":115,"Price":95.4,"SkuId":"103851107853","SpecAttributes":{"尺码":"2XL（120-130斤）","颜色":"蓝色两件套（外套+裙子）"}},{"AmountOnSale":100,"ImageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/2f202934f16f0eee41257b77bf489262.jpeg","Key":"1215:105309781;1226:33656","OriginalPrice":115,"Price":95.4,"SkuId":"103851107854","SpecAttributes":{"尺码":"3XL（130-140斤）","颜色":"蓝色两件套（外套+裙子）"}}],"SkuProps":[{"IsImg":true,"Prop":"颜色","Value":[{"imageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg","name":"粉色两件套(外套+裙子)","value":"1215:1115500378"},{"imageUrl":"http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg","name":"米色两件套（外套+裙子）","value":"1215:1115501666"},{"imageUrl":"http://t00img.yangkeduo.com/goods/images/2018-11-17/48b30664f0f7e526ab1b956e813f25cf.jpeg","name":"蓝色两件套（外套+裙子）","value":"1215:105309781"}]},{"IsImg":false,"Prop":"尺码","Value":[{"name":"S（90斤以下）","value":"1226:119128"},{"name":"M（90-100斤）","value":"1226:96784"},{"name":"L（100-110斤）","value":"1226:33651"},{"name":"XL（110-120斤）","value":"1226:33652"},{"name":"2XL（120-130斤）","value":"1226:33653"},{"name":"3XL（130-140斤）","value":"1226:33656"}]}],"SourceType":6,"Subject":"【2件套】套装秋冬新款仿獭兔毛钉珠皮草毛毛短外套加厚大衣女装","Tag":null,"Unit":null,"UserId":"461742","_ddf":"app","format_check":"ok"},"reason":"","request_id":"gw-4.63510267214bd","secache":"c98b29872e8a4b28859db207944ba817","secache_date":"2023-09-18 15:54:30","secache_time":1666253415,"server_memory":"0.84MB","server_time":"Beijing/2023-10-20 16:10:15","translate_engine":"baidu","translate_language":"zh-CN"}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'eq\': {\'error_code\': \'0000\'}}]\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'error_code\': \'0000\'}，等于预期结果：{\'error_code\': \'0000\'}\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.045173099999999966, 'doc': '', 'time': '2023-09-18 15:54:30'}, {'id': 1695023671.0277507, 'title': 'testcase/Business interface/test_business_scenario.py::TestEBusinessScenario::test_business_scenario[case_info2]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：提交订单\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/placeAnOrder\nINFO     common.recordlog:sendrequest.py:137 请求方式：post\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：详情页面选择规格，提交订单\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/json;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:147 请求参数：{\'json\': {\'goods_id\': \'18382788819\', \'number\': 2, \'propertyChildIds\': \'2:9\', \'inviter_id\': 127839112, \'price\': \'128\', \'freight_insurance\': \'0.00\', \'discount_code\': \'002399\', \'consignee_info\': {\'name\': \'张三\', \'phone\': 13800000000, \'address\': \'北京市海淀区西三环北路74号院4栋3单元1008\'}}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"crateTime":"2023-09-18 15:54:31","error":"","error_code":"0000","message":"提交订单成功","orderNumber":"381502567833144273304","translate_language":"zh-CN","userId":"3818932580987349964"}\n\nINFO     common.recordlog:apiutil_business.py:166 json提取到参数：{\'orderNumber\': \'381502567833144273304\'}\nINFO     common.recordlog:apiutil_business.py:166 json提取到参数：{\'userId\': \'3818932580987349964\'}\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'eq\': {\'message\': \'提交订单成功\'}}]\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'message\': \'提交订单成功\'}，等于预期结果：{\'message\': \'提交订单成功\'}\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.03350900000000001, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.0722728, 'title': 'testcase/Business interface/test_business_scenario.py::TestEBusinessScenario::test_business_scenario[case_info3]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：订单支付\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/orderPay\nINFO     common.recordlog:sendrequest.py:137 请求方式：post\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：订单支付\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/json;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:147 请求参数：{\'json\': {\'orderNumber\': \'381502567833144273304\', \'userId\': \'3818932580987349964\', \'timeStamp\': \'1695023671\'}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"createTime":"2023-09-18 15:54:31","error":"","error_code":"0000","message":"订单支付成功","translate_language":"zh-CN"}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'eq\': {\'message\': \'订单支付成功\'}}]\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'message\': \'订单支付成功\'}，等于预期结果：{\'message\': \'订单支付成功\'}\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.0313762999999998, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.1182966, 'title': 'testcase/Business interface/test_business_scenario.py::TestEBusinessScenario::test_business_scenario[case_info4]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：校验订单状态\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/checkOrderStatus\nINFO     common.recordlog:sendrequest.py:137 请求方式：post\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：校验商品订单状态\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/json;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:147 请求参数：{\'json\': {\'orderNumber\': \'381502567833144273304\', \'timeStamp\': \'1695023671\'}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error":"","error_code":"","queryTime":"2023-09-18 15:54:31","status":"0","translate_language":"zh-CN"}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'eq\': {\'status\': \'0\'}}]\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'status\': \'0\'}，等于预期结果：{\'status\': \'0\'}\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.030613199999999896, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.163366, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_add_user[base_info0-testcase0]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：新增用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/addUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：正常新增用户\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'username\': \'testadduser\', \'password\': \'tset6789890\', \'role_id\': 123456789, \'dates\': \'2023-12-31\', \'phone\': 13800000000, \'token\': \'Cf9b77dABb7C4a7060EDBe26D121a\'}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"新增成功","msg_code":200}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'status_code\': 200}}, {\'contains\': {\'msg\': \'新增成功\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【新增成功】,实际结果【新增成功】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.030800099999999997, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.1944122, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_add_user[base_info1-testcase1]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：新增用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/addUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效新增·缺少token\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'username\': \'testadduser\', \'password\': \'tset6789890\', \'role_id\': 123456789, \'dates\': \'2023-12-31\', \'phone\': 13800000000, \'token\': None}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"新增失败","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'status_code\': 200}}, {\'contains\': {\'msg\': \'新增失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【新增失败】,实际结果【新增失败】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.01642010000000038, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.2409205, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_add_user[base_info2-testcase2]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：新增用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/addUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效新增·缺少必填参数username\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'password\': \'tset6789890\', \'role_id\': 123456789, \'dates\': \'2023-12-31\', \'phone\': 13800000000, \'token\': None}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"新增失败","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'status_code\': 200}}, {\'contains\': {\'msg\': \'新增失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【新增失败】,实际结果【新增失败】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.031051499999999788, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.2869115, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_add_user[base_info3-testcase3]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：新增用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/addUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效新增·缺少必填参数role_id\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'username\': \'testadduser\', \'password\': \'tset6789890\', \'dates\': \'2023-12-31\', \'phone\': 13800000000, \'token\': None}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"新增失败","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'status_code\': 200}}, {\'contains\': {\'msg\': \'新增失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【新增失败】,实际结果【新增失败】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.031066399999999827, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.3343716, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_update_user[base_info0-testcase0]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：修改用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/updateUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：正常修改用户信息\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'username\': \'testadduser\', \'password\': \'tset6789#$123\', \'role_id\': 89588181111112343, \'dates\': \'2023-12-31\', \'phone\': 13800000000}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"更新成功","msg_code":200}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'status_code\': 200}}, {\'contains\': {\'msg\': \'更新成功\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【更新成功】,实际结果【更新成功】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.03245710000000024, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.3546257, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_delete_user[base_info0-testcase0]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：删除用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/deleteUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：有效删除用户\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'user_id\': 123839387391912}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"删除成功!","msg_code":200}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'msg\': \'删除成功\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【删除成功】,实际结果【删除成功!】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.006646899999999789, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.409872, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_delete_user[base_info1-testcase1]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：删除用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/deleteUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效删除用户·userid不存在\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'user_id\': 1238393873922}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"删除失败，用户id不存在!","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'msg\': \'删除失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【删除失败】,实际结果【删除失败，用户id不存在!】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.031827599999999734, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.4572525, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_delete_user[base_info2-testcase2]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：删除用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/deleteUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效删除用户·userid为空\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'user_id\': 1238393873922}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"删除失败，用户id不存在!","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'msg\': \'删除失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【删除失败】,实际结果【删除失败，用户id不存在!】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.03207479999999974, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.5037963, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_delete_user[base_info3-testcase3]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：删除用户\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/deleteUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：无效删除用户·缺少必填参数\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"msg":"删除失败，用户id不存在!","msg_code":9001}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'msg\': \'删除失败\'}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【删除失败】,实际结果【删除失败，用户id不存在!】\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.03140149999999986, 'doc': '', 'time': '2023-09-18 15:54:31'}, {'id': 1695023671.549463, 'title': 'testcase/Single interface/test_debug_api.py::TestUserManager::test_query_user[base_info0-testcase0]', 'logs': 'Captured log setup\nINFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------\nCaptured log call\nINFO     common.recordlog:sendrequest.py:135 接口名称：用户查询\nINFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/queryUser\nINFO     common.recordlog:sendrequest.py:137 请求方式：POST\nINFO     common.recordlog:sendrequest.py:138 测试用例名称：有效查询用户\nINFO     common.recordlog:sendrequest.py:139 请求头：{\'Content-Type\': \'application/x-www-form-urlencoded;charset=UTF-8\'}\nINFO     common.recordlog:sendrequest.py:140 Cookie：None\nINFO     common.recordlog:sendrequest.py:144 请求参数：{\'data\': {\'user_id\': 123839387391912}}\nINFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"查询成功!","msg_code":200}\n\nINFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{\'contains\': {\'msg\': \'查询成功\'}}, {\'eq\': {\'msg_code\': 200}}]\nINFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【查询成功】,实际结果【查询成功!】\nINFO     common.recordlog:assertions.py:68 相等断言成功：接口实际结果：{\'msg_code\': 200}，等于预期结果：{\'msg_code\': 200}\nINFO     common.recordlog:assertions.py:198 测试成功\n', 'result': 1, 'duration': 0.03187350000000011, 'doc': '', 'time': '2023-09-18 15:54:31'}],
+          logs:'',
+          summary: {'total': 15, 'success': 15, 'failed': 0, 'success_rate': 1.0, 'fail_rate': 0.0, 'duration': 0.444907699999999, 'avg_duration': 0.029660513333333267},
+          expands: [],
+          getRowKeys (row) {
+            return row.id
+          },
+          currentPage: 1,
+            pageSize: 10
+        }
+      },
+      methods:{
+        count(index) {
+            return (this.currentPage - 1) * this.pageSize + index + 1
+        },
+        expend(row, expandedRows){
+            var that = this
+            if (expandedRows.length) {
+              that.expands = []
+              if (row) {
+                that.expands.push(row.id)
+              }
+            } else {
+              that.expands = []
+            }
+        },
+        filterTag(value, row) {
+          return row.result === value;
+        },
+        handleSizeChange(val) {
+            this.pageSize = val;
+          },
+        handleCurrentChange(val) {
+            this.currentPage=val;
+        },
+        fliterChange(filters){
+            const filterskey = filters.result;
+            console.log(filterskey)
+            if (filterskey.length>0) {
+              this.data = this.tableData.filter(data => {
+
+                  return data['result'] === filterskey[0] | data['result'] === filterskey[1];
+              });
+              this.currentPage = 1;
+              return this.data;
+            }
+            this.data = this.tableData;
+            this.currentPage = 1;
+            return this.data
+        },
+      },
+      mounted(){
+        this.data = this.tableData;
+      }
+    })
+  </script>
+
+  <script type="text/javascript">
+
+var chartDom = document.getElementById('main');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+    series: [{
+        type: 'gauge',
+        startAngle: 180,
+        endAngle: 0,
+        min: 0,
+        max: 1,
+        splitNumber: 8,
+        axisLine: {
+            lineStyle: {
+                width: 6,
+                color: [
+                    [0.25, '#FF6E76'],
+                    [0.5, '#FDDD60'],
+                    [0.75, 'darkslateblue'],
+                    [1, '#97cc64']
+                ]
+            }
+        },
+        pointer: {
+            icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+            length: '12%',
+            width: 20,
+            offsetCenter: [0, '-60%'],
+            itemStyle: {
+                color: 'auto'
+            }
+        },
+        axisTick: {
+            length: 12,
+            lineStyle: {
+                color: 'auto',
+                width: 2
+            }
+        },
+        splitLine: {
+            length: 20,
+            lineStyle: {
+                color: 'auto',
+                width: 5
+            }
+        },
+        axisLabel: {
+            color: '#464646',
+            fontSize: 20,
+            distance: -60,
+            formatter: function (value) {
+                if (value === 0.875) {
+                    return '优';
+                }
+                else if (value === 0.625) {
+                    return '中';
+                }
+                else if (value === 0.375) {
+                    return '良';
+                }
+                else if (value === 0.125) {
+                    return '差';
+                }
+            }
+        },
+        title: {
+            offsetCenter: [0, '-20%'],
+            fontSize: 30
+        },
+        detail: {
+            fontSize: 30,
+            offsetCenter: [0, '30%'],
+            valueAnimation: true,
+            formatter: function (value) {
+                return Math.round(value * 100) + '%';
+            },
+            color: 'auto'
+        },
+        data: [{
+            value: 1.0,
+            name: '执行成功率'
+        }]
+    }]
+};
+
+option && myChart.setOption(option);
+
+</script>
+  <script type="text/javascript">
+    var chartDom = document.getElementById('main2');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+option = {
+    title: {
+        text: '用例执行情况',
+        subtext: '本次执行成功失败比例',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+    },
+    series: [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius: '50%',
+            data: [{'value': 15, 'name': 'Success', 'itemStyle': {'color': '#97cc64'}}, {'value': 0, 'name': 'Failed', 'itemStyle': {'color': '#fd5a3e'}}],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+option && myChart.setOption(option);
+</script>
+
+<style>
+  .el-header, .el-footer {
+    background-color: darkslateblue;
+    text-align: center;
+    color: white;
+    /*line-height: 60px;*/
+  }
+
+  .el-col {
+    margin-right: 10px;
+  }
+
+  .el-card{
+    border-radius: 15px;
+  }
+
+  .el-table .cell {
+    white-space: pre-line;
+
+    }
+  /*.el-aside {*/
+  /*  background-color: #D3DCE6;*/
+  /*  color: #333;*/
+  /*  text-align: center;*/
+  /*  line-height: 400px;*/
+  /*}*/
+</style>
+</html>

@@ -1,0 +1,82 @@
+- baseInfo:
+    description: 业务场景测试用例编写示范
+    api_name: 商品列表
+    url: /coupApply/cms/goodsList
+    method: Get
+    header:
+      Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+      token: ${get_extract_data(token)}
+  testCase:
+    - case_name: 获取商品列表
+      params:
+        msgType: getHandsetListOfCust
+        page: 1
+        size: 20
+      validation:
+        - contains: { 'error_code': '0000' }
+      extract_list:
+        goodsIds: $.goodsList[*].goodsId
+- baseInfo:
+    api_name: 商品详情
+    url: /coupApply/cms/productDetail
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 获取商品详情
+      json:
+        pro_id: ${get_extract_data(goodsIds,1)}
+        page: 1
+        size: 20
+      validation:
+        - eq: { 'error_code': '0000' }
+- baseInfo:
+    api_name: 提交订单
+    url: /coupApply/cms/placeAnOrder
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 详情页面选择规格，提交订单
+      json:
+        goods_id: ${get_extract_data(goodsIds,1)}
+        number: 2
+        propertyChildIds: "2:9"
+        inviter_id: 127839112
+        price: "128"
+        freight_insurance: "0.00"
+        discount_code: "002399"
+        consignee_info:
+          { "name": "张三","phone": 13800000000,"address": "北京市海淀区西三环北路74号院4栋3单元1008" }
+      validation:
+        - eq: { 'message': '提交订单成功' }
+      extract:
+        orderNumber: $.orderNumber
+        userId: $.userId
+- baseInfo:
+    api_name: 订单支付
+    url: /coupApply/cms/orderPay
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 订单支付
+      json:
+        orderNumber: ${get_extract_data(orderNumber)}
+        userId: ${get_extract_data(userId)}
+        timeStamp: ${timestamp()}
+      validation:
+        - eq: { 'message': '订单支付成功' }
+- baseInfo:
+    api_name: 校验订单状态
+    url: /coupApply/cms/checkOrderStatus
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 校验商品订单状态
+      json:
+        orderNumber: ${get_extract_data(orderNumber)}
+        timeStamp: ${timestamp()}
+      validation:
+        - eq: { 'status': '0' }

@@ -1,0 +1,25 @@
+- baseInfo:
+    api_name: 删除用户
+    url: /dar/user/deleteUser
+    method: POST
+    header:
+      Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+  testCase:
+    - case_name: 有效删除用户
+      data:
+        user_id: 123839387391912
+      validation:
+        - contains: { 'msg': '删除成功' }
+    - case_name: 无效删除用户·userid不存在
+      data:
+        user_id: 1238393873922
+      validation:
+        - contains: { 'msg': '删除失败' }
+    - case_name: 无效删除用户·userid为空
+      data:
+        user_id: 1238393873922
+      validation:
+        - contains: { 'msg': '删除失败' }
+    - case_name: 无效删除用户·缺少必填参数
+      validation:
+        - contains: { 'msg': '删除失败' }

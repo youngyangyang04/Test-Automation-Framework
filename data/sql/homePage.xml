@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--SQL结尾处不能有分号符（;）-->
+<HomePage>
+    <select id="ent_sales">
+        SELECT
+        enterprise ,
+        SUM(total ) as tal
+        FROM
+        ****.******
+        WHERE
+        `date` >= '2022-07-01'
+        AND `date` &lt; '2022-07-25'
+        GROUP BY enterprise
+        ORDER BY tal DESC
+        limit 10
+    </select>
+</HomePage>

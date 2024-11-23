@@ -1,0 +1,15 @@
+- baseInfo:
+    api_name: 电网系统登录
+    url: /coupApply/cms/login_dw
+    method: post
+    header:
+      Content-Type: application/json;charset=UTF-8
+  testCase:
+    - case_name: 检查登录正常
+      json:
+        username: test123
+        password: qwe666
+      validation:
+        - contains: { 'msg': '调用成功' }
+      extract:
+        user_token: $.data.user_token

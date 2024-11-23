@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--SQL结尾处不能有分号符（;）-->
+<NewVehicleAddShare>
+    <select id="zyl">
+        SELECT province , SUM(total) veh_total FROM ****** tvn
+        WHERE
+        `date` >= '2022-01-01'and `date` &lt;= '2022-07-25'AND new_veh = 1 GROUP BY province
+        ORDER BY veh_total DESC
+    </select>
+    <select id="zqsa">
+        SELECT province , SUM(CASE when enterprise = '' then total else 0 end) zq_total FROM
+        ***** tvn
+        WHERE
+        `date` >= '2022-01-01'and `date` &lt;= '2022-07-25'AND new_veh = 1
+        GROUP BY province
+        ORDER BY zq_total DESC
+    </select>
+    <select>
+        <query id="que">
+            SELECT (273-231)/231*100
+        </query>
+    </select>
+</NewVehicleAddShare>

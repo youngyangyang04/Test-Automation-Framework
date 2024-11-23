@@ -1,0 +1,38 @@
+<environment>
+    <parameter>
+        <key>Browser</key>
+        <value>Chrome</value>
+    </parameter>
+    <parameter>
+        <key>system</key>
+        <value>Window10</value>
+    </parameter>
+    <parameter>
+        <key>python version</key>
+        <value>3.8.2</value>
+    </parameter>
+    <parameter>
+        <key>allure version</key>
+        <value>allure-2.13.8</value>
+    </parameter>
+    <parameter>
+        <key>BaseUrl</key>
+        <value>https://www.baidu.com</value>
+    </parameter>
+    <parameter>
+        <key>environment</key>
+        <value>生产环境</value>
+    </parameter>
+    <parameter>
+        <key>Project</key>
+        <value>xxx项目接口自动化测试</value>
+    </parameter>
+    <parameter>
+        <key>email</key>
+        <value>123456@163.com;7892223@qq.com;12333@163.com</value>
+    </parameter>
+    <parameter>
+        <key>author</key>
+        <value>张三</value>
+    </parameter>
+</environment>

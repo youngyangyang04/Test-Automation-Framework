@@ -1,0 +1,14 @@
+INFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------
+INFO     common.recordlog:sendrequest.py:135 接口名称：新增用户
+INFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/dar/user/addUser
+INFO     common.recordlog:sendrequest.py:137 请求方式：POST
+INFO     common.recordlog:sendrequest.py:138 测试用例名称：正常新增用户
+INFO     common.recordlog:sendrequest.py:139 请求头：{'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+INFO     common.recordlog:sendrequest.py:140 Cookie：None
+INFO     common.recordlog:sendrequest.py:144 请求参数：{'data': {'username': 'testadduser', 'password': 'tset6789890', 'role_id': 123456789, 'dates': '2023-12-31', 'phone': 13800000000, 'token': 'd29a4c8D22D3B3c9dfCa3eFEBf530'}}
+INFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error_code":null,"msg":"新增成功","msg_code":200}
+
+INFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{'contains': {'status_code': 200}}, {'contains': {'msg': '新增成功'}}]
+INFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【新增成功】,实际结果【新增成功】
+INFO     common.recordlog:assertions.py:198 测试成功
+INFO     common.recordlog:conftest.py:22 -------------接口测试结束--------------

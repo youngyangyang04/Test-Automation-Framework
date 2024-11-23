@@ -1,0 +1,14 @@
+INFO     common.recordlog:conftest.py:20 -------------接口测试开始--------------
+INFO     common.recordlog:sendrequest.py:135 接口名称：商品详情
+INFO     common.recordlog:sendrequest.py:136 请求地址：http://127.0.0.1:8787/coupApply/cms/productDetail
+INFO     common.recordlog:sendrequest.py:137 请求方式：post
+INFO     common.recordlog:sendrequest.py:138 测试用例名称：获取商品详情
+INFO     common.recordlog:sendrequest.py:139 请求头：{'Content-Type': 'application/json;charset=UTF-8'}
+INFO     common.recordlog:sendrequest.py:140 Cookie：None
+INFO     common.recordlog:sendrequest.py:147 请求参数：{'json': {'pro_id': '18382788819,33809635011,56996760797,82193785267,74190550836', 'page': 1, 'size': 20}}
+INFO     common.recordlog:sendrequest.py:108 接口返回信息：{"error":"不存在该商品","error_code":"4000","goodsId":"","item":{},"secache_date":"2023-09-18 17:58:34","translate_language":"zh-CN"}
+
+INFO     common.recordlog:assertions.py:170 yaml文件预期结果：[{'contains': {'error_code': '4000'}}]
+INFO     common.recordlog:assertions.py:45 字符串包含断言成功：预期结果【4000】,实际结果【4000】
+INFO     common.recordlog:assertions.py:198 测试成功
+INFO     common.recordlog:conftest.py:22 -------------接口测试结束--------------
