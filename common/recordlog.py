@@ -9,7 +9,7 @@ import datetime
 
 log_path = setting.FILE_PATH["LOG"]
 if not os.path.exists(log_path): os.mkdir(log_path)
-logfile_name = log_path + r"\test.{}.log".format(time.strftime("%Y%m%d"))
+logfile_name = log_path + r"\test.{}.logs".format(time.strftime("%Y%m%d"))
 
 
 class RecordLog:
