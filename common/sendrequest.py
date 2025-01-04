@@ -9,7 +9,7 @@ from conf import setting
 from common.recordlog import logs
 from requests import utils
 from common.readyaml import ReadYamlData
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from urllib3.exceptions import InsecureRequestWarning
 
 
 class SendRequest:

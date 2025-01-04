@@ -5,7 +5,6 @@ import os
 from common.recordlog import logs
 from conf.operationConfig import OperationConfig
 from conf.setting import FILE_PATH
-from yaml.scanner import ScannerError
 
 
 def get_testcase_yaml(file):

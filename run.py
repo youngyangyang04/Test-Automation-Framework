@@ -12,7 +12,7 @@ if __name__ == '__main__':
              '--junitxml=./report/results.xml'])
 
         shutil.copy('./environment.xml', './report/temp')
-        os.system(f'allure serve ./report/temp')
+        os.system('allure serve ./report/temp')
 
     elif REPORT_TYPE == 'tm':
         pytest.main(['-vs', '--pytest-tmreport-name=testReport.html', '--pytest-tmreport-path=./report/tmreport'])
