@@ -1,0 +1,390 @@
+{
+"item": {
+		"SourceType": 6,
+		"OfferId": 1620002566,
+		"CategoryId": 8484,
+		"Subject": "【2件套】套装秋冬新款仿獭兔毛钉珠皮草毛毛短外套加厚大衣女装",
+		"ImageUrls": [
+			"https://omsproductionimg.yangkeduo.com/images/2017-12-12/bcf848aa71c6389607ae7a84b70f1543.jpeg",
+			"https://omsproductionimg.yangkeduo.com/images/2017-12-12/176019babfdecffa1d9f98f40b7e99b4.jpeg",
+			"https://omsproductionimg.yangkeduo.com/images/2017-12-12/efb5db42397550bffd3211ca6f197498.jpeg",
+			"https://omsproductionimg.yangkeduo.com/images/2017-12-12/d209ef7bcc9183c3bb8ca1dfdb108d49.jpeg",
+			"https://omsproductionimg.yangkeduo.com/images/2017-12-12/74257ab65f3f00da7a90fde9042fe640.jpeg",
+			"https://t00img.yangkeduo.com/goods/images/2019-08-17/e8fbd9cb-cc74-4caa-9380-84c46d27b008.jpg",
+			"https://t00img.yangkeduo.com/goods/images/2019-08-17/d76f515b-e375-4060-b94e-cf64f6b0964e.jpg",
+			"https://t00img.yangkeduo.com/goods/images/2019-08-17/f2f279b5-6000-4fbe-b99b-7c1cbd7884ea.jpg"
+		],
+		"SkuProps": [
+			{
+				"IsImg": true,
+				"Prop": "颜色",
+				"Value": [
+					{
+						"name": "粉色两件套(外套+裙子)",
+						"value": "1215:1115500378",
+						"imageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+					},
+					{
+						"name": "米色两件套（外套+裙子）",
+						"value": "1215:1115501666",
+						"imageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+					},
+					{
+						"name": "蓝色两件套（外套+裙子）",
+						"value": "1215:105309781",
+						"imageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/48b30664f0f7e526ab1b956e813f25cf.jpeg"
+					}
+				]
+			},
+			{
+				"IsImg": false,
+				"Prop": "尺码",
+				"Value": [
+					{
+						"name": "S（90斤以下）",
+						"value": "1226:119128"
+					},
+					{
+						"name": "M（90-100斤）",
+						"value": "1226:96784"
+					},
+					{
+						"name": "L（100-110斤）",
+						"value": "1226:33651"
+					},
+					{
+						"name": "XL（110-120斤）",
+						"value": "1226:33652"
+					},
+					{
+						"name": "2XL（120-130斤）",
+						"value": "1226:33653"
+					},
+					{
+						"name": "3XL（130-140斤）",
+						"value": "1226:33656"
+					}
+				]
+			}
+		],
+		"SkuMaps": [
+			{
+				"SkuId": "57114357891",
+				"Key": "1215:1115500378;1226:119128",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "S（90斤以下）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 73,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357892",
+				"Key": "1215:1115500378;1226:96784",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "M（90-100斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 65,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357893",
+				"Key": "1215:1115500378;1226:33651",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "L（100-110斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 82,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357894",
+				"Key": "1215:1115500378;1226:33652",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "XL（110-120斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 89,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357895",
+				"Key": "1215:1115500378;1226:33653",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "2XL（120-130斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 94,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357896",
+				"Key": "1215:1115500378;1226:33656",
+				"SpecAttributes": {
+					"颜色": "粉色两件套(外套+裙子)",
+					"尺码": "3XL（130-140斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 105,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/062d42b525a7c786920cbb83ac772af7.jpeg"
+			},
+			{
+				"SkuId": "57114357897",
+				"Key": "1215:1115501666;1226:119128",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "S（90斤以下）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 1051,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "57114357898",
+				"Key": "1215:1115501666;1226:96784",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "M（90-100斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 88,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "57114357899",
+				"Key": "1215:1115501666;1226:33651",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "L（100-110斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 80,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "57114357900",
+				"Key": "1215:1115501666;1226:33652",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "XL（110-120斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 660,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "57114357901",
+				"Key": "1215:1115501666;1226:33653",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "2XL（120-130斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 126,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "57114357902",
+				"Key": "1215:1115501666;1226:33656",
+				"SpecAttributes": {
+					"颜色": "米色两件套（外套+裙子）",
+					"尺码": "3XL（130-140斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 89,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-08-28/415bed99d5a925123d7b7c39547205de.jpeg"
+			},
+			{
+				"SkuId": "103851107855",
+				"Key": "1215:105309781;1226:119128",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "S（90斤以下）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 98,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/48b30664f0f7e526ab1b956e813f25cf.jpeg"
+			},
+			{
+				"SkuId": "103851107856",
+				"Key": "1215:105309781;1226:96784",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "M（90-100斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 95,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/3660b7893ca5cda1ffcea745d10b2506.jpeg"
+			},
+			{
+				"SkuId": "103851107857",
+				"Key": "1215:105309781;1226:33651",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "L（100-110斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 97,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/a4a5a671afbb2d8e1f4c21c0ced3bea8.jpeg"
+			},
+			{
+				"SkuId": "103851107858",
+				"Key": "1215:105309781;1226:33652",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "XL（110-120斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 97,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/f0551176629bf81f25757c160198dba1.jpeg"
+			},
+			{
+				"SkuId": "103851107853",
+				"Key": "1215:105309781;1226:33653",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "2XL（120-130斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 99,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/801a2e23140bfe76229f02aab0a8a5fe.jpeg"
+			},
+			{
+				"SkuId": "103851107854",
+				"Key": "1215:105309781;1226:33656",
+				"SpecAttributes": {
+					"颜色": "蓝色两件套（外套+裙子）",
+					"尺码": "3XL（130-140斤）"
+				},
+				"Price": 95.4,
+				"OriginalPrice": 115,
+				"AmountOnSale": 100,
+				"ImageUrl": "http://t00img.yangkeduo.com/goods/images/2018-11-17/2f202934f16f0eee41257b77bf489262.jpeg"
+			}
+		],
+		"PriceRangeInfos": [
+			{
+				"ConvertPrice": 0,
+				"Price": 95.4,
+				"Range": "3"
+			}
+		],
+		"OriginalPriceRangeInfos": [
+			{
+				"ConvertPrice": 0,
+				"Price": 115,
+				"Range": "3"
+			}
+		],
+		"AmountOnSale": 3188,
+		"DescUrl": null,
+		"Detail": "<img src=\"https://img.pddpic.com/mms-material-img/2022-09-18/3f89d470-1af8-4dee-b529-6d62aa2ea3b7.png\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2019-02-15/ddf6fe7b-b536-4183-932d-69a1189a3f59.png\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/20f659b04d3e7e5851c27ff9931c96fc.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2019-11-14/4420a8c3-49ed-46d8-ab55-15e7a638ca31.jpg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/26c3e9d5cfbaf4e8f13b2bdd38f48d71.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/0aa872fa74599dad7b6aefe6b6c035c0.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/6bc959e32a30424c7a5284a37676999c.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/1fa9861a8c99c5e9e8119fd2239fef5a.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/b62cabf1d2320c5761e3f4c15203fb20.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/6f6e54376a66cbc78e16700d4c424fe1.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/2f60753dfc875a6876adc35833a69d31.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/ae0116e589d8de712f8dafd0c356cefe.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/da910c98fcc8de1b4d2d1498cd7899fd.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/140349649d8b7d08c8e88bfbbaa2f900.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/a953bae2eeb7364ef3ef2976a97d07eb.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/4da59828136c3b1308aad0aa990778a7.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-09-02/4a365b61a80e47288c8609ccd5982396.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-11-17/cd0a8a96b783a51236812ce24c59a329.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-11-17/16008ac19768d05e7dee16406ff958a1.jpeg\" style=\"width:100%;\"/><img src=\"https://t00img.yangkeduo.com/goods/images/2018-11-17/ef1d17b69ebf9449a8bb52459b168c26.jpeg\" style=\"width:100%;\"/>",
+		"ProductFeatures": {
+			"面料材质": "仿皮草",
+			"成分含量": "71%（含）—80%（含）",
+			"版型": "修身",
+			"领型": "圆领",
+			"衣长": "短款",
+			"是否带毛领": "不带毛领",
+			"主风格": "气质名媛"
+		},
+		"ProductFeatureTuples": [
+			{
+				"Item1": "面料材质",
+				"Item2": "仿皮草"
+			},
+			{
+				"Item1": "成分含量",
+				"Item2": "71%（含）—80%（含）"
+			},
+			{
+				"Item1": "版型",
+				"Item2": "修身"
+			},
+			{
+				"Item1": "领型",
+				"Item2": "圆领"
+			},
+			{
+				"Item1": "衣长",
+				"Item2": "短款"
+			},
+			{
+				"Item1": "是否带毛领",
+				"Item2": "不带毛领"
+			},
+			{
+				"Item1": "主风格",
+				"Item2": "气质名媛"
+			}
+		],
+		"Unit": null,
+		"Delivery": {
+			"From": null,
+			"To": null,
+			"Postage": "快递 免运费",
+			"extras": null,
+			"Info": null,
+			"MarkInfo": null
+		},
+		"MainImageVideo": null,
+		"ShopName": "果果家气质女装",
+		"ShopUrl": "http://yangkeduo.com/mall_page.html?mall_id=461742",
+		"ShopId": "461742",
+		"UserId": "461742",
+		"SellerId": null,
+		"SellerNick": null,
+		"ShopInfo": null,
+		"SellCount": "已拼4.2万件",
+		"Coupon": null,
+		"Tag": null,
+		"FansCount": null,
+		"RateCount": null,
+		"RetryCount": 0,
+		"_ddf": "app",
+		"format_check": "ok"
+	},
+	"error": "",
+	"secache": "c98b29872e8a4b28859db207944ba817",
+	"secache_time": 1666253415,
+	"secache_date": "2023-04-20 16:10:15",
+	"reason": "",
+	"error_code": "0000",
+	"cache": 0,
+	"api_info": "today:21 max:10000 all[90=21+33+36];expires:2030-12-31",
+	"execution_time": "0.437",
+	"server_time": "Beijing/2023-10-20 16:10:15",
+	"client_ip": "106.6.39.223",
+	"call_args": {
+		"num_iid": "1620002566"
+	},
+	"api_type": "pinduoduo",
+	"translate_language": "zh-CN",
+	"translate_engine": "baidu",
+	"server_memory": "0.84MB",
+	"request_id": "gw-4.63510267214bd",
+	"goodsId": "1296917462"
+}

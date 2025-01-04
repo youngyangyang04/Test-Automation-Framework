@@ -1,7 +1,8 @@
 # Test-Automation-Framework
 
 【代码随想录知识星球】项目分享-自动化测试框架
-项目结构
+
+## 项目结构
 
 ```text
 
@@ -23,3 +24,28 @@
 └── run.py                 # 启动入口
 ```
 
+## 使用说明
+
+### 使用 “uv.lock” 安装依赖
+
+```bash
+uv sync
+```
+
+### 安装 allure
+
+Mac 安装 allure
+
+```bash
+brew install allure
+```
+
+Windows 安装 allure
+
+[text](https://allurereport.org/docs/install-for-windows/)
+
+### 运行测试
+
+```bash
+uv run run.py
+```

@@ -7,7 +7,7 @@ import sys
 import pymongo
 import paramiko
 import pandas as pd
-from clickhouse_sqlalchemy import make_session, exceptions
+from clickhouse_sqlalchemy import make_session
 from sqlalchemy import create_engine
 from conf.operationConfig import OperationConfig
 from common.recordlog import logs
