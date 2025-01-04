@@ -26,12 +26,6 @@
 
 ## 使用说明
 
-### 使用 “uv.lock” 安装依赖
-
-```bash
-uv sync
-```
-
 ### 安装 allure
 
 Mac 安装 allure
@@ -42,9 +36,20 @@ brew install allure
 
 Windows 安装 allure
 
-[text](https://allurereport.org/docs/install-for-windows/)
+[allure 安装文档](https://allurereport.org/docs/install-for-windows/)
+
+### 启动 mock_server
+
+使用 uv run 会自动创建虚拟环境，并启动 mock_server
+
+```bash
+cd mock_server/api_server && \
+uv run base/flask_service.py 
+```
 
 ### 运行测试
+
+使用 uv run 会自动创建虚拟环境，并测试上面的 mock_server 接口, 运行完成后会自动生成 allure 报告
 
 ```bash
 uv run run.py
