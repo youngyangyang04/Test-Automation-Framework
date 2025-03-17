@@ -23,6 +23,8 @@
 ├── environment.xml        # 环境配置
 └── run.py                 # 启动入口
 ```
+## 数据流
+<img width="580" alt="image" src="https://github.com/user-attachments/assets/b0e3ba19-ec0c-46b1-93a4-0c3741100171" />
 
 ## 使用说明
 
