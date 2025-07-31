@@ -21,3 +21,71 @@ dependencies = [
     "xlrd>=2.0.1",
     "xlutils>=2.0.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+]
+
+[tool.ruff]
+# 行长度限制
+line-length = 88
+
+# Python版本目标
+target-version = "py312"
+
+# 选择的检查规则
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+
+# 忽略的检查规则
+ignore = [
+    "E501",  # line too long (handled by formatter)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+# 排除的文件和目录
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "report",
+]
+
+[tool.ruff.format]
+# 使用双引号
+quote-style = "double"
+
+# 缩进风格
+indent-style = "space"
+
+# 保留魔术逗号
+skip-magic-trailing-comma = false
+
+# 行结尾
+line-ending = "auto"
