@@ -122,42 +122,5 @@
 
 ## 获取本项目专栏
 
-本文档仅为星球内部专享，大家可以加入[知识星球](https://www.programmercarl.com/other/kstar.html)里获取，在星球置顶一。
-
-## 加入[知识星球](https://mp.weixin.qq.com/s/KGFo2aoDqTKTRHmRa8c1Cw)四大权益
-
-1、**高质量项目合集（C++ / Java / Go / Python / AI**）
-
-包含了刚刚发布的，AI应用服务平台🔥，全网十分稀缺的 C++ AI应用项目。
-
-![](https://file1.kamacoder.com/i/web/2025-09-29_11-09-40.jpg)
-
-2、**精品八股PDF**
-
-速记八股帮助众多录友们，短时间内快速上岸：
-
-![](https://file1.kamacoder.com/i/web/2025-09-28_17-44-23.jpg)
-
-3、**独家资料 & 学习氛围**
-
-大厂面经、薪资报告、秋招投递总结表
-
-![](https://file1.kamacoder.com/i/web/2025-09-28_18-26-47.jpg)
-
-学习路线清晰，方向明确
-
-![](https://file1.kamacoder.com/i/web/2025-09-28_18-39-32.jpg)
-
-星球里全是志同道合的伙伴，学习氛围 🔥🔥🔥
-
-![](https://file1.kamacoder.com/i/web/2025-09-28_18-50-25.jpg)
-
-4、**卡哥 1v1 提问 & 简历修改**
-
-直接向我提问，面试疑惑、学习路线、职业规划一对一解答
-
-![](https://file1.kamacoder.com/i/web/2025-09-29_10-07-44.jpg)
-
-加入[知识星球](https://www.programmercarl.com/other/kstar.html)后如果不满意，三天内（72h）可全额退款！
-
+**本文档仅为星球内部专享，大家可以加入[知识星球](https://www.programmercarl.com/other/kstar.html)里获取，在星球置顶一**。
 
