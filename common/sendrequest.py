@@ -132,41 +132,6 @@ class SendRequest:
             logs.error(e)
             pytest.fail("请求异常，请检查系统或数据是否正常！")
 
-    def get(self, url, data=None, header=None):
-        """向后兼容的 GET 包装"""
-        response = self.request(
-            "GET", url, params=data, headers=header, cookies=self.cookie
-        )
-        if response is None:
-            return None
-        return self._to_legacy_dict(response)
-
-    def post(self, url, data=None, header=None):
-        """向后兼容的 POST 包装"""
-        response = self.request(
-            "POST", url, data=data, headers=header, cookies=self.cookie
-        )
-        if response is None:
-            return None
-        return self._to_legacy_dict(response)
-
-    @staticmethod
-    def _to_legacy_dict(response):
-        """兼容旧接口返回的结构"""
-        res_ms = response.elapsed.microseconds / 1000
-        res_second = response.elapsed.total_seconds()
-        response_dict = {
-            "code": response.status_code,
-            "text": response.text,
-            "res_ms": res_ms,
-            "res_second": res_second,
-        }
-        try:
-            response_dict["body"] = response.json().get("body")
-        except Exception:
-            response_dict["body"] = ""
-        return response_dict
-
     def run_main(
         self, name, url, case_name, header, method, cookies=None, file=None, **kwargs
     ):
