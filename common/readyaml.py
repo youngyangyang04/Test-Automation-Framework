@@ -65,8 +65,7 @@ class ReadYamlData:
 
         file = None
         file_path = FILE_PATH['EXTRACT']
-        if not os.path.exists(file_path):
-            os.system(file_path)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         try:
             file = open(file_path, 'a', encoding='utf-8')
             if isinstance(value, dict):
@@ -77,7 +76,8 @@ class ReadYamlData:
         except Exception:
             logs.error(str(traceback.format_exc()))
         finally:
-            file.close()
+            if file:
+                file.close()
 
     def clear_yaml_data(self):
         """
